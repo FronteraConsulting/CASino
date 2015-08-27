@@ -44,6 +44,14 @@ class CASino::AuthTokenValidationService
         return true
       end
     end
+
+    CASino::AuthTokenSigner.where(enabled: true).each do |auth_token_signer|
+      if auth_token_signer.signature_valid?(signature, token)
+        Rails.logger.info("Successfully validated auth token signature with #{auth_token_signer.name}")
+        return true
+      end
+    end
+
     Rails.logger.warn('Signature could not be validated: No matching key found.')
     false
   end
