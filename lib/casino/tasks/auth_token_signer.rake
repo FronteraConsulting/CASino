@@ -106,7 +106,7 @@ namespace :casino do
         has_records = true
       end
       if !has_records
-        puts 'There are no Auth Token Signers to remove.'
+        puts 'There are no Auth Token Signers.'
       end
       puts
     end
