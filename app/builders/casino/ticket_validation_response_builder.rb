@@ -17,7 +17,7 @@ class CASino::TicketValidationResponseBuilder
           proxies = []
           service_ticket = ticket
           while service_ticket.is_a?(CASino::ProxyTicket)
-            proxy_granting_ticket = ticket.proxy_granting_ticket
+            proxy_granting_ticket = service_ticket.proxy_granting_ticket
             proxies << proxy_granting_ticket.pgt_url
             service_ticket = proxy_granting_ticket.granter
           end
