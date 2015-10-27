@@ -3,6 +3,8 @@ require 'addressable/uri'
 module CASino::SessionsHelper
   include CASino::TicketGrantingTicketProcessor
   include CASino::ServiceTicketProcessor
+  include CASino::ProxyGrantingTicketProcessor
+  include CASino::ControllerConcern::TicketValidator
 
   def current_ticket_granting_ticket?(ticket_granting_ticket)
     ticket_granting_ticket.ticket == cookies[:tgt]
@@ -73,7 +75,20 @@ module CASino::SessionsHelper
       @service = params[:service]
       render 'casino/sessions/service_not_allowed', status: 403
     else
-      url = acquire_service_ticket(tgt, params[:service], options).service_with_ticket_url
+      #url = acquire_service_ticket(tgt, params[:service], options).service_with_ticket_url
+      
+      service_ticket = acquire_service_ticket(tgt, params[:service], options)
+      url = service_ticket.service_with_ticket_url
+      if !!options[:pgt_url]
+        pgt = acquire_proxy_granting_ticket(options[:pgt_url], service_ticket)
+        if !!pgt
+          uri = Addressable::URI.parse(url)
+          query_values = uri.query_values
+          query_values[:pgtIou] = pgt.iou
+          uri.query_values = query_values
+          url = uri.to_s
+        end
+      end
       redirect_to url, status: :see_other
     end
   end

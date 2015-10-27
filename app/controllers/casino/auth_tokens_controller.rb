@@ -4,7 +4,11 @@ class CASino::AuthTokensController < CASino::ApplicationController
   def login
     validation_result = validation_service.validation_result
     return redirect_to_login unless validation_result
-    sign_in(validation_result)
+    options = {}
+    if !!params[:pgtUrl]
+      options[:pgt_url] = params[:pgtUrl]
+    end
+    sign_in(validation_result, options)
   end
 
   private
