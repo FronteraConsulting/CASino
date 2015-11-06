@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150827150204) do
+ActiveRecord::Schema.define(version: 20151026130743) do
 
   create_table "casino_auth_token_signers", force: :cascade do |t|
     t.string   "name"
@@ -97,6 +97,7 @@ ActiveRecord::Schema.define(version: 20150827150204) do
     t.boolean  "long_term",                          default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "user_ip"
   end
 
   add_index "casino_ticket_granting_tickets", ["ticket"], name: "index_casino_ticket_granting_tickets_on_ticket", unique: true
